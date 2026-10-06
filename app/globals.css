@@ -1,11 +1,92 @@
 @import "tailwindcss";
 
+/* DA « fanzine vandalisé » : papier photocopié, encre noire, bombes fluo. */
 @theme inline {
   --font-sans: var(--font-geist);
+  --font-display: var(--font-anton);
+  --font-mono: var(--font-space-mono);
+  --font-tag: var(--font-sedgwick);
+
+  --color-paper: #ecebe4;
+  --color-ink: #0e0e0e;
+  --color-fluo-pink: #ff2e93;
+  --color-acid: #b6ff00;
+  --color-orange: #ff5a1f;
+  --color-cobalt: #2448ff;
 }
 
 @layer components {
   .input {
-    @apply w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition;
+    @apply w-full border-0 border-b-2 border-current/30 bg-transparent px-1 py-2.5 text-base placeholder-current/40 focus:outline-none focus:border-acid transition-colors;
   }
+
+  /* Bouton brut : bloc d'encre, pas d'arrondi, passe au fluo au survol. */
+  .btn-raw {
+    @apply inline-block bg-ink px-6 py-3 font-display text-lg uppercase tracking-wide text-paper transition-colors hover:bg-fluo-pink hover:text-ink;
+  }
+
+  /* Peinture passée à la photocopieuse : noir et blanc contrasté + trame de points. */
+  .xerox {
+    filter: grayscale(1) contrast(1.45) brightness(1.06);
+  }
+  .halftone {
+    position: relative;
+  }
+  .halftone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, rgb(0 0 0 / 0.38) 0.9px, transparent 1.5px) 0 0 / 4px 4px;
+    mix-blend-mode: multiply;
+  }
+
+  /* Bandeau défilant : le contenu est dupliqué, on le fait glisser de la moitié. */
+  .marquee {
+    animation: marquee 32s linear infinite;
+  }
+
+  .fade-in {
+    animation: fade-in 0.8s ease-out both;
+  }
+
+  .fade-in-slow {
+    animation: fade-in 2.4s ease-out both;
+  }
+
+  .fade-in-late {
+    animation: fade-in 1.6s ease-out 1.2s both;
+  }
+
+  .sky-drift {
+    animation: sky-drift 240s linear infinite;
+  }
+
+  /* Coulures de peinture qui descendent après le tag. */
+  .drip {
+    transform-origin: top;
+    animation: drip 1.4s cubic-bezier(0.3, 0, 0.2, 1) both;
+  }
+}
+
+@keyframes marquee {
+  to { translate: -50% 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sky-drift {
+  to { rotate: 360deg; }
+}
+
+@keyframes drip {
+  from { scale: 1 0; }
+  to { scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-drift, .marquee, .drip { animation: none; }
 }

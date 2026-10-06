@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import type { ContactFormData } from '@/types'
+import { Halo } from '@/components/da/Doodles'
+import SprayTag from '@/components/da/SprayTag'
 
 const BUDGET_OPTIONS = ['< 100 €', '100 – 300 €', '300 – 500 €', '> 500 €']
 
@@ -36,14 +38,33 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="py-20 px-6 bg-gray-50">
-      <div className="max-w-xl mx-auto">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-10 text-center">
-          Commander une pièce
-        </h2>
+    <section id="contact" className="bg-ink px-4 py-20 text-paper sm:px-6">
+      <div className="grid gap-14 md:grid-cols-[1fr_1.1fr]">
+        <div>
+          <p className="font-mono text-xs uppercase text-paper/60">[ 03 ] Commande</p>
+          <h2 className="mt-4 font-display text-6xl uppercase leading-[0.85] sm:text-8xl">
+            Commander
+            <br />
+            une pièce
+          </h2>
+          <SprayTag className="relative mt-4 -rotate-3 text-4xl text-acid sm:text-5xl" drips={[[25, 0.5], [70, 0.3]]}>
+            on la dessine ensemble
+          </SprayTag>
 
+          {/* Oculus de Mantegna photocopié : une fenêtre ouverte sur le ciel, auréolée à la bombe. */}
+          <div className="relative mt-14 w-56 sm:w-64">
+            <div
+              role="img"
+              aria-label="L'oculus de la Camera degli Sposi d'Andrea Mantegna : un ciel bordé de putti"
+              className="xerox aspect-square rounded-full bg-[url(/da/mantegna-oculus.jpg)] bg-[length:312%_auto] bg-[position:50%_4%]"
+            />
+            <Halo className="absolute -top-8 left-1/2 w-44 -translate-x-1/2 text-fluo-pink" />
+          </div>
+        </div>
+
+        <div className="md:pt-10">
         {status === 'success' ? (
-          <p className="text-center text-gray-600">
+          <p className="font-mono text-sm uppercase leading-relaxed">
             Merci ! Votre demande a bien été envoyée. Je vous recontacte rapidement.
           </p>
         ) : (
@@ -101,7 +122,7 @@ export default function Contact() {
                 name="budget"
                 value={form.budget ?? ''}
                 onChange={handleChange}
-                className="input"
+                className="input [&_option]:text-ink"
               >
                 <option value="">Sélectionner…</option>
                 {BUDGET_OPTIONS.map((opt) => (
@@ -111,7 +132,7 @@ export default function Contact() {
             </Field>
 
             {status === 'error' && (
-              <p className="text-sm text-red-500">
+              <p className="font-mono text-xs uppercase text-orange">
                 Une erreur est survenue. Veuillez réessayer.
               </p>
             )}
@@ -119,12 +140,13 @@ export default function Contact() {
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full bg-gray-900 text-white py-3 rounded-full text-sm hover:bg-gray-700 transition-colors disabled:opacity-50"
+              className="mt-4 bg-paper px-6 py-3 font-display text-lg uppercase tracking-wide text-ink transition-colors hover:bg-acid disabled:opacity-50"
             >
               {status === 'loading' ? 'Envoi…' : 'Envoyer la demande'}
             </button>
           </form>
         )}
+        </div>
       </div>
     </section>
   )
@@ -141,7 +163,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="block text-sm text-gray-700 mb-1">
+      <label htmlFor={htmlFor} className="block font-mono text-[11px] uppercase tracking-wider text-paper/60">
         {label}
       </label>
       {children}

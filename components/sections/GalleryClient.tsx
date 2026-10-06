@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import type { Jewel } from '@/types'
+import { Scribble } from '@/components/da/Doodles'
 
 type Props = {
   jewels: Jewel[]
@@ -55,9 +56,9 @@ export default function GalleryClient({ jewels }: Props) {
   return (
     <>
       {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
+        <div className="flex flex-wrap border-b-2 border-ink font-mono text-xs uppercase">
           <FilterButton active={activeCategory === null} onClick={() => setActiveCategory(null)}>
-            Tous
+            Tout
           </FilterButton>
           {categories.map((cat) => (
             <FilterButton
@@ -72,37 +73,45 @@ export default function GalleryClient({ jewels }: Props) {
       )}
 
       {filtered.length === 0 ? (
-        <p className="text-center text-gray-400">Aucun bijou dans cette catégorie.</p>
+        <p className="px-6 py-20 text-center font-mono text-sm uppercase">Aucun bijou dans cette catégorie.</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {filtered.map((jewel) => {
+        // Planche contact : filets noirs entre les pièces, comme une grille de shop indé.
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          {filtered.map((jewel, i) => {
             const thumb = jewel.images?.[0]
             return (
               <button
                 key={jewel.id}
                 onClick={() => setLightbox({ jewel, index: 0 })}
-                className="group bg-white rounded-lg overflow-hidden border border-gray-100 text-left hover:shadow-md transition-shadow"
+                className="group relative border-b-2 border-r-2 border-ink p-3 text-left sm:p-4"
               >
-                <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                <div className="relative aspect-square overflow-hidden bg-ink/5">
                   {thumb ? (
                     <Image
                       src={thumb}
                       alt={jewel.title}
                       fill
                       unoptimized
-                      sizes="(max-width: 640px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-xs">
-                      Pas d'image
+                    <div className="absolute inset-0 flex items-center justify-center font-mono text-xs uppercase text-ink/40">
+                      Pas d&apos;image
                     </div>
                   )}
                 </div>
-                <div className="p-3">
-                  <p className="text-sm font-medium text-gray-800">{jewel.title}</p>
+                <Scribble
+                  className="pointer-events-none absolute inset-x-0 top-[8%] w-full scale-90 text-fluo-pink opacity-0 transition duration-300 group-hover:scale-100 group-hover:opacity-100"
+                  drips={[]}
+                />
+                <div className="mt-3 flex items-start justify-between gap-2 font-mono text-[11px] uppercase leading-snug sm:text-xs">
+                  <div>
+                    <p className="text-ink/50">{String(i + 1).padStart(3, '0')}</p>
+                    <p className="font-bold">{jewel.title}</p>
+                  </div>
                   {jewel.category && (
-                    <p className="text-xs text-gray-400 mt-0.5">{jewel.category}</p>
+                    <span className="shrink-0 bg-ink px-1.5 py-0.5 text-paper">{jewel.category}</span>
                   )}
                 </div>
               </button>
@@ -113,7 +122,7 @@ export default function GalleryClient({ jewels }: Props) {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-4"
           onClick={() => setLightbox(null)}
         >
           <div
@@ -122,12 +131,12 @@ export default function GalleryClient({ jewels }: Props) {
           >
             <button
               onClick={() => setLightbox(null)}
-              className="absolute -top-10 right-0 text-white/70 hover:text-white text-sm transition-colors"
+              className="absolute -top-10 right-0 font-mono text-xs uppercase text-paper/70 transition-colors hover:text-acid"
             >
-              Fermer ✕
+              Fermer [x]
             </button>
 
-            <div className="relative aspect-square bg-gray-900 rounded-xl overflow-hidden">
+            <div className="relative aspect-square overflow-hidden border-2 border-paper bg-ink">
               {currentImages[lightbox.index] ? (
                 <Image
                   src={currentImages[lightbox.index]}
@@ -138,8 +147,8 @@ export default function GalleryClient({ jewels }: Props) {
                   className="object-contain"
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm">
-                  Pas d'image
+                <div className="absolute inset-0 flex items-center justify-center font-mono text-xs uppercase text-paper/50">
+                  Pas d&apos;image
                 </div>
               )}
 
@@ -147,30 +156,31 @@ export default function GalleryClient({ jewels }: Props) {
                 <>
                   <button
                     onClick={prev}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/50 text-white text-xl hover:bg-black/70 transition-colors"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-paper px-3 py-2 font-mono text-ink transition-colors hover:bg-acid"
                   >
-                    ‹
+                    ←
                   </button>
                   <button
                     onClick={next}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/50 text-white text-xl hover:bg-black/70 transition-colors"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-paper px-3 py-2 font-mono text-ink transition-colors hover:bg-acid"
                   >
-                    ›
+                    →
                   </button>
                 </>
               )}
             </div>
 
-            {currentImages.length > 1 && (
-              <p className="text-center text-white/50 text-xs mt-2">
-                {lightbox.index + 1} / {currentImages.length}
-              </p>
-            )}
-
-            <div className="mt-4 text-white">
-              <p className="font-medium">{lightbox.jewel.title}</p>
-              {lightbox.jewel.description && (
-                <p className="text-sm text-white/60 mt-1">{lightbox.jewel.description}</p>
+            <div className="mt-4 flex items-start justify-between gap-4 font-mono text-xs uppercase text-paper">
+              <div>
+                <p className="font-bold">{lightbox.jewel.title}</p>
+                {lightbox.jewel.description && (
+                  <p className="mt-1 normal-case text-paper/70">{lightbox.jewel.description}</p>
+                )}
+              </div>
+              {currentImages.length > 1 && (
+                <p className="shrink-0 text-paper/50">
+                  {lightbox.index + 1} / {currentImages.length}
+                </p>
               )}
             </div>
           </div>
@@ -192,10 +202,8 @@ function FilterButton({
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-1.5 rounded-full text-sm border transition-colors ${
-        active
-          ? 'bg-gray-900 text-white border-gray-900'
-          : 'border-gray-200 text-gray-600 hover:border-gray-400'
+      className={`border-r-2 border-ink px-4 py-3 uppercase transition-colors sm:px-6 ${
+        active ? 'bg-ink text-paper' : 'hover:bg-acid'
       }`}
     >
       {children}

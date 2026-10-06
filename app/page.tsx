@@ -1,26 +1,10 @@
-import { getJewels } from '@/lib/supabase'
-import type { Jewel } from '@/types'
-import Hero from '@/components/sections/Hero'
-import Gallery from '@/components/sections/Gallery'
-import About from '@/components/sections/About'
-import Contact from '@/components/sections/Contact'
-import Footer from '@/components/sections/Footer'
+import TunnelEntrance from '@/components/landing/TunnelEntrance'
 
-export default async function Home() {
-  let jewels: Jewel[] = []
-  try {
-    jewels = await getJewels()
-  } catch (err) {
-    console.error('[Supabase] getJewels failed:', err)
-  }
-
+export default function Landing() {
   return (
-    <main>
-      <Hero />
-      <Gallery jewels={jewels} />
-      <About />
-      <Contact />
-      <Footer />
+    <main className="relative flex-1 min-h-dvh overflow-hidden bg-ink text-paper">
+      <h1 className="sr-only">Focus Bijouterie</h1>
+      <TunnelEntrance />
     </main>
   )
 }
